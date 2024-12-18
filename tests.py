@@ -21,6 +21,10 @@ class UserModelCase(unittest.TestCase):
         u.set_password('drogie_maslo')
         self.assertFalse(u.check_password('kakakka'))
         self.assertTrue(u.check_password('drogie_maslo'))
+        u1 = User(username='basia', email='basia@test.com')
+        u1.set_password('tanie_maslo')
+        self.assertFalse(u1.check_password('lalal'))
+        self.assertTrue(u1.check_password('tanie_maslo'))
 
 
 if __name__ == '__main__':
