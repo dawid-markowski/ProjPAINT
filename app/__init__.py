@@ -7,6 +7,8 @@ import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 from flask_mail import Mail
+from flask_admin import Admin
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -15,6 +17,7 @@ migrate = Migrate(app,db)
 login = LoginManager(app)
 login.login_view = 'auth.login'
 mail = Mail(app)
+admin = Admin(app)
 
 
 def create_app(config_class=Config):
@@ -26,12 +29,20 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     mail.init_app(app)
+    from app.admin_.routes import MyHomeView
+    admin.init_app(app, index_view=MyHomeView())
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    from app.shop import bp as shop_bp
+    app.register_blueprint(shop_bp, url_prefix='/shop')
+
+    from app.admin_ import bp as admin_bp
+    app.register_blueprint(admin_bp)
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)

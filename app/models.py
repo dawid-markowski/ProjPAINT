@@ -17,6 +17,8 @@ class User(UserMixin,db.Model):
                                              unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
+    is_admin = so.mapped_column(sa.Boolean, default=False)
+
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(
         back_populates='author')
     def set_password(self, password):

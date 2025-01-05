@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h1>Hi, {{ current_user.username }}!</h1>
+        {% for part in parts %}
+        <div><p><a href="{{ url_for('shop.part', part=part.part_name) }}">{{ part.part_name }}</a></b>:{{ part.description }}</p></div>
+        {% endfor %}
+{% endblock %}
+

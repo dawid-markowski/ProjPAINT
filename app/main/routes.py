@@ -9,7 +9,6 @@ from app.main import bp
 
 @bp.route('/')
 @bp.route('/index')
-@login_required
 def index():
     parts = db.session.scalars(sa.select(Part)).all()
     return render_template('index.html', title='Strona glowna', parts=parts)
@@ -18,11 +17,7 @@ def index():
 @login_required
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
-    parts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html', user=user, parts=parts)
+    return render_template('user.html', user=user)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
