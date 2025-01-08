@@ -15,6 +15,7 @@
             {% else %}
             <a href="{{ url_for('shop.parts') }}">Parts</a>
             <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for('cart.view_cart') }}">Cart</a>
             <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% endif %}
             {% if current_user.is_admin %}
