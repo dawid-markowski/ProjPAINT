@@ -21,6 +21,7 @@ class User(UserMixin,db.Model):
 
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(
         back_populates='author')
+    cart: so.Mapped['Cart'] = so.relationship('Cart', back_populates='user', uselist=False)
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -74,3 +75,25 @@ class Comment(db.Model):
 @login.user_loader
 def load_user(id):
     return db.session.get(User,int(id))
+
+
+class Cart(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True, unique=True)
+    user: so.Mapped[User] = so.relationship('User', back_populates='cart')
+    items: so.WriteOnlyMapped['CartItem'] = so.relationship('CartItem', back_populates='cart', cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'<Cart of User {self.user_id}>'
+
+class CartItem(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    cart_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Cart.id), index=True)
+    part_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Part.id), index=True)
+    quantity: so.Mapped[int] = so.mapped_column(default=1)
+
+    cart: so.Mapped[Cart] = so.relationship('Cart', back_populates='items')
+    part: so.Mapped[Part] = so.relationship('Part')
+
+    def __repr__(self):
+        return f'<CartItem {self.quantity}x {self.part.part_name} in Cart {self.cart_id}>'
