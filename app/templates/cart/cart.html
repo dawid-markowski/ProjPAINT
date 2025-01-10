@@ -15,6 +15,11 @@
         {% endfor %}
     </ul>
 
+ <!-- Przycisk Checkout -->
+    <form method="post" action="{{ url_for('checkout.checkout') }}">
+        <button type="submit" class="btn btn-success">Złóż zamówienie</button>
+    </form>
+
 
 {% else %}
     <p>Twój koszyk jest pusty.</p>

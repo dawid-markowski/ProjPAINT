@@ -7,7 +7,7 @@ from flask_login import UserMixin
 import jwt
 from app import app
 from time import time
-
+from datetime import datetime
 
 class User(UserMixin,db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -22,6 +22,10 @@ class User(UserMixin,db.Model):
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(
         back_populates='author')
     cart: so.Mapped['Cart'] = so.relationship('Cart', back_populates='user', uselist=False)
+
+    orders: so.Mapped[list['Order']] = so.relationship('Order', backref='user')
+
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -54,8 +58,9 @@ class Part(db.Model):
                                                    unique=True)
     #group: so.Mapped[str] = so.mapped_column(sa.String(64),index=True)
 
-    comments: so.WriteOnlyMapped['Comment'] = so.relationship(
-        back_populates='p_commented')
+    comments: so.WriteOnlyMapped['Comment'] = so.relationship(back_populates='p_commented')
+
+    order_items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='part')
 
     def __repr__(self):
         return '<Part {}>'.format(self.part_name)
@@ -81,7 +86,7 @@ class Cart(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True, unique=True)
     user: so.Mapped[User] = so.relationship('User', back_populates='cart')
-    items: so.WriteOnlyMapped['CartItem'] = so.relationship('CartItem', back_populates='cart', cascade="all, delete-orphan")
+    items: so.WriteOnlyMapped['CartItem'] = so.relationship('CartItem', back_populates='cart', cascade="all, delete-orphan", passive_deletes=True)
 
     def __repr__(self):
         return f'<Cart of User {self.user_id}>'
@@ -97,3 +102,35 @@ class CartItem(db.Model):
 
     def __repr__(self):
         return f'<CartItem {self.quantity}x {self.part.part_name} in Cart {self.cart_id}>'
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    created_at: so.Mapped[datetime] = so.mapped_column(default=sa.func.now(), nullable=False)
+    status: so.Mapped[str] = so.mapped_column(default="pending", nullable=False)
+
+    # Relacja z pozycjami zamówienia
+    items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='order')
+
+    def __repr__(self):
+        return f"<Order id={self.id}, user_id={self.user_id}, status='{self.status}', created_at={self.created_at}>"
+
+
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    order_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('orders.id'), nullable=False)
+    part_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('part.id'), nullable=False)
+    quantity: so.Mapped[int] = so.mapped_column(default=1, nullable=False)
+
+    # Relacja z zamówieniem
+    order: so.Mapped[Order] = so.relationship('Order', back_populates='items')
+
+    # Relacja z częścią
+    part: so.Mapped['Part'] = so.relationship('Part')
+
+    def __repr__(self):
+        return f"<OrderItem id={self.id}, order_id={self.order_id}, part_id={self.part_id}, quantity={self.quantity}>"

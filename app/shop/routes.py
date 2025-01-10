@@ -21,3 +21,4 @@ def part(part):
     query = sa.select(Part).where(Part.part_name == part)
     part= db.session.scalars(query).first()
     return render_template('shop/part.html',part=part)
+

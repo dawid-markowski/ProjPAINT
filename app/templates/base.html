@@ -13,13 +13,14 @@
             {% if current_user.is_anonymous %}
             <a href="{{ url_for('auth.login') }}">Login</a>
             {% else %}
-            <a href="{{ url_for('shop.parts') }}">Parts</a>
-            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('cart.view_cart') }}">Cart</a>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
-            {% endif %}
             {% if current_user.is_admin %}
-            <a href="{{ url_for('admin.index') }}">Admin</a>
+            <a href="{{ url_for('admin.index') }}">AdminPanel</a>
+            {% endif %}
+            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for('shop.parts') }}">Parts</a>
+            <a href="{{ url_for('cart.view_cart') }}">Cart</a>
+            <a href="{{ url_for('checkout.view_orders') }}">Orders</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% endif %}
         </div>
         <hr>

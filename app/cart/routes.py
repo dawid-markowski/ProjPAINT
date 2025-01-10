@@ -5,7 +5,7 @@ from app import db
 from app.cart import bp
 import sqlalchemy as sa
 
-#Trzeba pododawać template
+
 
 
 @bp.route('/create_cart', methods=['POST'])
