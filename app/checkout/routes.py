@@ -40,7 +40,7 @@ def checkout():
     db.session.commit()
 
     flash("Zamówienie zostało zrealizowane!", "success")
-    return redirect(url_for('checkout.orders'))
+    return redirect(url_for('checkout.view_orders'))
 
 
 @bp.route('/orders', methods=['GET'])
