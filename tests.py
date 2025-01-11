@@ -3,7 +3,7 @@ os.environ['DATABASE_URL'] = 'sqlite://'
 
 import unittest
 from app import db,create_app
-from app.models import User, Part, Comment
+from app.models import User, Part, Comment, Cart, CartItem, Order
 from config import Config
 
 class TestConfig(Config):
@@ -32,6 +32,7 @@ class UserModelCase(unittest.TestCase):
         u1.set_password('tanie_maslo')
         self.assertFalse(u1.check_password('lalal'))
         self.assertTrue(u1.check_password('tanie_maslo'))
+
 
 
 if __name__ == '__main__':

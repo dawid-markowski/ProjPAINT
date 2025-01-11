@@ -56,14 +56,16 @@ class Part(db.Model):
                                                  unique=True)
     description: so.Mapped[str] = so.mapped_column(sa.String(240),index=True,
                                                    unique=True)
-    #group: so.Mapped[str] = so.mapped_column(sa.String(64),index=True)
+    group: so.Mapped[str] = so.mapped_column(sa.String(64),index=True)
+
+    price: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
 
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(back_populates='p_commented')
 
     order_items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='part')
 
     def __repr__(self):
-        return '<Part {}>'.format(self.part_name)
+        return f'<Part {self.part_name}, price={self.price}>'
 
 class Comment(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -88,6 +90,10 @@ class Cart(db.Model):
     user: so.Mapped[User] = so.relationship('User', back_populates='cart')
     items: so.WriteOnlyMapped['CartItem'] = so.relationship('CartItem', back_populates='cart', cascade="all, delete-orphan", passive_deletes=True)
 
+    def get_total_price(self) -> float:
+        """Oblicza łączną cenę koszyka."""
+        return sum(item.get_total_price() for item in self.items)
+
     def __repr__(self):
         return f'<Cart of User {self.user_id}>'
 
@@ -100,8 +106,13 @@ class CartItem(db.Model):
     cart: so.Mapped[Cart] = so.relationship('Cart', back_populates='items')
     part: so.Mapped[Part] = so.relationship('Part')
 
+    def get_total_price(self) -> float:
+        """Oblicza łączną cenę dla danego przedmiotu w koszyku."""
+        return self.quantity * self.part.price
+
     def __repr__(self):
         return f'<CartItem {self.quantity}x {self.part.part_name} in Cart {self.cart_id}>'
+
 
 class Order(db.Model):
     __tablename__ = 'orders'
@@ -116,6 +127,10 @@ class Order(db.Model):
 
     # Relacja z pozycjami zamówienia
     items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='order')
+
+    def get_total_price(self) -> float:
+        """Oblicza łączną cenę zamówienia."""
+        return sum(item.get_total_price() for item in self.items)
 
     def __repr__(self):
         return f"<Order id={self.id}, user_id={self.user_id}, status='{self.status}', created_at={self.created_at}>"
@@ -134,6 +149,10 @@ class OrderItem(db.Model):
 
     # Relacja z częścią
     part: so.Mapped['Part'] = so.relationship('Part')
+
+    def get_total_price(self) -> float:
+        """Oblicza łączną cenę dla danego przedmiotu w zamówieniu."""
+        return self.quantity * self.part.price
 
     def __repr__(self):
         return f"<OrderItem id={self.id}, order_id={self.order_id}, part_id={self.part_id}, quantity={self.quantity}>"
