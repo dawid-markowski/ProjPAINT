@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Checkout</h1>
+<p>Proszę wypełnić dane zamówienia:</p>
+
+<form method="POST" action="{{ url_for('checkout.checkout') }}">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        <label for="address">Adres:</label>
+        {{ form.address(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        <label for="city">Miasto:</label>
+        {{ form.city(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        <label for="postal_code">Kod pocztowy:</label>
+        {{ form.postal_code(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+</form>
+{% endblock %}

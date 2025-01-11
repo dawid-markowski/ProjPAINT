@@ -108,6 +108,9 @@ class Order(db.Model):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'), nullable=False)
+    address: so.Mapped[str] = so.mapped_column(nullable=False)
+    city: so.Mapped[str] = so.mapped_column(nullable=False)
+    postal_code: so.Mapped[str] = so.mapped_column(nullable=False)
     created_at: so.Mapped[datetime] = so.mapped_column(default=sa.func.now(), nullable=False)
     status: so.Mapped[str] = so.mapped_column(default="pending", nullable=False)
 
