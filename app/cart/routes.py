@@ -45,7 +45,9 @@ def view_cart():
     )
     cart_items = db.session.scalars(query).all()
 
-    return render_template('cart/cart.html', cart_items=cart_items)
+    cart = db.session.scalar(sa.select(Cart).where(CartItem.cart_id == Cart.id))
+
+    return render_template('cart/cart.html', cart_items=cart_items,cart=cart)
 
 
 @bp.route('/remove_from_cart/<int:item_id>', methods=['POST'])

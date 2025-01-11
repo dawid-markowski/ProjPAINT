@@ -92,7 +92,12 @@ class Cart(db.Model):
 
     def get_total_price(self) -> float:
         """Oblicza łączną cenę koszyka."""
-        return sum(item.get_total_price() for item in self.items)
+        from sqlalchemy.orm import selectinload
+        items = db.session.scalars(
+            sa.select(CartItem).where(CartItem.cart_id == self.id).options(selectinload(CartItem.part))
+        ).all()
+
+        return sum(item.get_total_price() for item in items)
 
     def __repr__(self):
         return f'<Cart of User {self.user_id}>'

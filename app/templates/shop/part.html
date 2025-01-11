@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Strona Dla przedmiotu {{ part.part_name }}</h1>
+<h1>{{ part.part_name }} marki {{part.group}}</h1>
 <p>Opis: {{ part.description }}</p>
+<p>Cena: {{part.price}}</p>
 
 <form method="POST" action="{{ url_for('cart.add_to_cart', part_id=part.id) }}">
         <button type="submit" class="btn btn-primary">Dodaj do koszyka</button>

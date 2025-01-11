@@ -12,6 +12,7 @@
                     <li>{{ item.quantity }} x {{ item.part.part_name }}</li>
                     {% endfor %}
                 </ul>
+                Cena: {{ order.get_total_price() }}
             </li>
             {% endfor %}
         </ul>

@@ -7,14 +7,14 @@
     <ul>
         {% for item in cart_items %}
             <li>
-                {{ item.part.part_name }} - {{ item.quantity }} szt.
+                {{ item.part.part_name }} - {{ item.quantity }} szt. -{{ item.part.price }}
                 <form method="post" action="{{ url_for('cart.remove_from_cart',item_id=item.id) }}" style="display: inline;">
                     <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
                 </form>
             </li>
         {% endfor %}
     </ul>
-
+Podsumowanie: Cena {{ cart.get_total_price() }}
  <!-- Przycisk Checkout -->
     <form method="post" action="{{ url_for('checkout.checkout') }}">
         <button type="submit" class="btn btn-success">Złóż zamówienie</button>
