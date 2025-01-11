@@ -7,18 +7,6 @@ import sqlalchemy as sa
 
 
 
-
-@bp.route('/create_cart', methods=['POST'])
-def create_cart():
-    user = current_user  # zakładamy, że użytkownik jest zalogowany
-    if not user.cart:
-        cart = Cart(user=user)
-        db.session.add(cart)
-        db.session.commit()
-        return "Cart created!"
-    return "Cart already exists!"
-
-
 @bp.route('/add_to_cart/<int:part_id>', methods=['POST'])
 @login_required
 def add_to_cart(part_id):
@@ -34,6 +22,7 @@ def add_to_cart(part_id):
 
     # Sprawdź, czy część jest już w koszyku
     cart_item = CartItem.query.filter_by(cart_id=user.cart.id, part_id=part_id).first()
+
     if cart_item:
         cart_item.quantity += 1  # Zwiększ ilość
     else:

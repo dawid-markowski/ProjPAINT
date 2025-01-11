@@ -35,8 +35,8 @@ def checkout():
         )
         db.session.add(order_item)
 
-    # Usuń koszyk użytkownika
-    db.session.delete(user.cart)
+    # Usuń przedmioty z koszyku uzytkownika
+    db.session.query(CartItem).filter_by(cart_id=user.cart.id).delete()
     db.session.commit()
 
     flash("Zamówienie zostało zrealizowane!", "success")
