@@ -2,7 +2,8 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import app, db, create_app
 from app.models import User, Part, Comment
-from app.populate import populate_db
+
+
 @app.shell_context_processor
 def make_shell_context():
     return {'sa': sa, 'so': so, 'db': db, 'User': User, 'Part': Part, 'Comment': Comment}
