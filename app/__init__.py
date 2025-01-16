@@ -10,6 +10,7 @@ from flask_mail import Mail
 from flask_admin import Admin
 
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
@@ -29,6 +30,8 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     mail.init_app(app)
+
+
     from app.admin_.routes import MyHomeView
     admin.init_app(app, index_view=MyHomeView())
 
