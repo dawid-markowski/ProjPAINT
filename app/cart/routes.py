@@ -1,6 +1,6 @@
 from app.models import Part,Cart, CartItem
 from flask_login import current_user, login_required
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from app import db
 from app.cart import bp
 import sqlalchemy as sa
@@ -15,6 +15,8 @@ def add_to_cart(part_id):
     if not part:
         return "Part not found", 404
 
+    quantity = int(request.form.get('quantity', 1))
+
     # Utwórz koszyk, jeśli go nie ma
     if not user.cart:
         user.cart = Cart(user=user)
@@ -24,9 +26,9 @@ def add_to_cart(part_id):
     cart_item = CartItem.query.filter_by(cart_id=user.cart.id, part_id=part_id).first()
 
     if cart_item:
-        cart_item.quantity += 1  # Zwiększ ilość
+        cart_item.quantity += quantity
     else:
-        cart_item = CartItem(cart=user.cart, part=part, quantity=1)
+        cart_item = CartItem(cart=user.cart, part=part, quantity=quantity)
         db.session.add(cart_item)
 
     db.session.commit()

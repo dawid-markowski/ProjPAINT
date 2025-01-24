@@ -6,6 +6,7 @@
 <p>Cena: {{part.price}}</p>
 
 <form method="POST" action="{{ url_for('cart.add_to_cart', part_id=part.id) }}">
+        <input type="number" name="quantity" value="1" min="1" style="width: 50px;">
         <button type="submit" class="btn btn-primary">Dodaj do koszyka</button>
     </form>
 

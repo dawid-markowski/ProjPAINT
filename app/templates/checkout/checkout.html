@@ -22,6 +22,63 @@
         {{ form.postal_code(class="form-control") }}
     </div>
 
+    <div class="form-group">
+        <label for="payment_method">Metoda płatności:</label>
+        <select name="payment_method" id="payment_method" class="form-control">  <option value="card">Karta</option>
+            <option value="blik">BLIK</option>
+            <option value="pbr">Za pobraniem</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="delivery_method">Metoda dostawy:</label>
+        {{ form.delivery_method(class="form-control") }}
+    </div>
+
+    <div class="form-group card-details" style="display: none;">
+        <label for="card_number">Numer karty:</label>
+        <input type="text" name="card_number" id="card_number" class="form-control">
+    </div>
+
+    <div class="form-group card-details" style="display: none;">
+        <label for="expiration_date">Data ważności:</label>
+        <input type="text" name="expiration_date" id="expiration_date" class="form-control" placeholder="MM/YY">
+    </div>
+
+    <div class="form-group card-details" style="display: none;">
+        <label for="cvv">CVV:</label>
+        <input type="text" name="cvv" id="cvv" class="form-control">
+    </div>
+
+    <div class="form-group blik-details" style="display: none;">
+        <label for="blik_code">Kod BLIK:</label>
+        <input type="text" name="blik_code" id="blik_code" class="form-control">
+    </div>
+
     <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const cardDetails = document.querySelectorAll('.card-details');
+        const blikDetails = document.querySelector('.blik-details');
+
+        function toggleFields() {
+            if (paymentMethodSelect.value === 'card') {
+                cardDetails.forEach(detail => detail.style.display = 'block');
+                blikDetails.style.display = 'none';
+            } else if (paymentMethodSelect.value === 'blik') {
+                cardDetails.forEach(detail => detail.style.display = 'none');
+                blikDetails.style.display = 'block';
+            } else {
+                cardDetails.forEach(detail => detail.style.display = 'none');
+                blikDetails.style.display = 'none';
+            }
+        }
+
+        paymentMethodSelect.addEventListener('change', toggleFields);
+        toggleFields();
+    });
+</script>
 {% endblock %}
