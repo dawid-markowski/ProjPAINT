@@ -130,6 +130,7 @@ class Order(db.Model):
     created_at: so.Mapped[datetime] = so.mapped_column(default=sa.func.now(), nullable=False)
     status: so.Mapped[str] = so.mapped_column(default="pending", nullable=False)
     payment_method: so.Mapped[str] = so.mapped_column(nullable=False)
+    delivery_method: so.Mapped[str] = so.mapped_column(nullable=False)
 
     # Relacja z pozycjami zamówienia
     items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='order')

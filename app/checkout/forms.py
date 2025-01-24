@@ -7,6 +7,7 @@ class CheckoutForm(FlaskForm):
     city = StringField("Miasto", validators=[DataRequired(), Length(max=100)])
     postal_code = StringField("Kod pocztowy", validators=[DataRequired(), Length(max=20)])
     payment_method = SelectField('Metoda płatności',choices=[('card', 'Karta'), ('blik', 'BLIK'), ('pbr', 'Za pobraniem')],validators=[DataRequired()])
+    delivery_method = SelectField('Metoda dostawy',choices=[('inpost', 'InPost'), ('dhl', 'DHL'), ('poczta', 'Poczta Polska')],validators=[DataRequired()])
     card_number = StringField('Numer karty', validators=[Optional(), Length(min=16, max=19)])
     expiration_date = StringField('Data ważności',validators=[Optional(), Regexp(r'^\d{2}/\d{2}$', message="Format MM/YY")])
     cvv = StringField('CVV', validators=[Optional(), Length(min=3, max=4)])
@@ -14,8 +15,6 @@ class CheckoutForm(FlaskForm):
     submit = SubmitField("Złóż zamówienie")
 
     def validate(self, extra_validators=None):
-        print(f"DEBUG: self = {self}")
-        print(f"DEBUG: hasattr(self, 'blik_code') = {hasattr(self, 'blik_code')}")
 
 
         initial_validation = super(CheckoutForm, self).validate(extra_validators=extra_validators)

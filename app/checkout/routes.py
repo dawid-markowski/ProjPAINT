@@ -11,7 +11,7 @@ from app.checkout.forms import CheckoutForm
 @bp.route('/checkout', methods=['POST'])
 @login_required
 def checkout():
-    print(f"DEBUG: request.form = {request.form}")  # Dodaj na początku funkcji
+    #print(f"DEBUG: request.form = {request.form}")  # Dodaj na początku funkcji
     user = current_user
 
     if not user.cart or not user.cart.items:
@@ -19,10 +19,11 @@ def checkout():
         return redirect(url_for('cart.view_cart'))
 
     form = CheckoutForm()
-    print(f"DEBUG: form.validate_on_submit() = {form.validate_on_submit()}")  # Dodaj debugowanie
+    #print(f"DEBUG: form.validate_on_submit() = {form.validate_on_submit()}")  # Dodaj debugowanie
     if form.validate_on_submit():
         payment_method = request.form.get('payment_method')
-        print(f"DEBUG: payment_method (from request.form) = {payment_method}")
+        delivery_method = form.delivery_method.data
+        #print(f"DEBUG: payment_method (from request.form) = {payment_method}")
         # Utwórz zamówienie
         order = Order(
             user=user,
@@ -30,7 +31,8 @@ def checkout():
             city=form.city.data,
             postal_code=form.postal_code.data,
             status='pending',
-            payment_method = payment_method
+            payment_method = payment_method,
+            delivery_method = delivery_method
         )
         db.session.add(order)
 
@@ -62,7 +64,7 @@ def checkout():
             # Tutaj kod do wygenerowania kodu BLIK i wyświetlenia instrukcji
             return redirect(url_for('checkout.view_orders', order_id=order.id))
         elif payment_method == 'pbr':
-            print("DEBUG: Obsługa płatności za pobraniem")  # Dodaj debugowanie
+            #print("DEBUG: Obsługa płatności za pobraniem")  # Dodaj debugowanie
             flash("Zamówienie za pobraniem zostało złożone.", "success")
             return redirect(url_for('checkout.view_orders'))
         else:
