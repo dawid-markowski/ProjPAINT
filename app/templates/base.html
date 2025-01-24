@@ -7,28 +7,102 @@
       <title>Welcome to Samochodoza</title>
       {% endif %}
     </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFFAF0;
+            margin: 0;
+            padding: 0;
+        }
+        .container1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1px;
+        }
+        .container h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .nav-bar a {
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-bar a:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 200px;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+        .search-bar input[type="text"]:focus {
+            box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.5);
+        }
+        .search-bar button {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .search-bar button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
     <body>
-        <div>Samochodoza:
-            <a href="{{ url_for('main.index') }}">Home</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            {% else %}
-            {% if current_user.is_admin %}
-            <a href="{{ url_for('admin.index') }}">AdminPanel</a>
-            {% endif %}
-            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('shop.parts') }}">Parts</a>
-            <a href="{{ url_for('cart.view_cart') }}">Cart</a>
-            <a href="{{ url_for('checkout.view_orders') }}">Orders</a>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        <div class="container1">
+            <h1>Samochodoza</h1>
 
-            <form method="GET" action={{url_for('shop.parts')}}>
-            <input type="text" name="search" placeholder="Wyszukaj części..." value="{{ search_query }}">
-            <button type="submit">Szukaj</button>
-            </form>
+            <div class="nav-bar">
+                <a href="{{ url_for('main.index') }}">Home</a>
+                {% if current_user.is_anonymous %}
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                {% else %}
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.index') }}">AdminPanel</a>
+                {% endif %}
+                <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
+                <a href="{{ url_for('shop.parts') }}">Parts</a>
+                <a href="{{ url_for('cart.view_cart') }}">Cart</a>
+                <a href="{{ url_for('checkout.view_orders') }}">Orders</a>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% endif %}
+            </div>
 
-            {% endif %}
+            <div class="search-bar">
+                <form method="GET" action={{url_for('shop.parts')}}>
+                    <input type="text" name="search" placeholder="Wyszukaj części..." value="{{ search_query }}">
+                    <button type="submit">Szukaj</button>
+                </form>
+            </div>
         </div>
+
         <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

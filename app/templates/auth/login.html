@@ -1,29 +1,124 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate>
-        <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-        Forgot Your Password?
-        <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a>
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
-    </form>
+    <style>
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+        }
+
+        .card {
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #b2bec3;
+            padding: 10px;
+        }
+
+        .form-control:focus {
+            border-color: #56a8e7;
+            box-shadow: 0 0 0 0.2rem rgba(116, 117, 119, 0.25);
+        }
+
+        .btn-primary {
+            background: #f507f1;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #597a9f;
+        }
+
+        a.text-primary {
+            color: #1677c9;
+            font-weight: bold;
+        }
+
+        a.text-primary:hover {
+            color: #143060;
+        }
+
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .text-center {
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
+
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center">Sign In</h2>
+                <form action="" method="post" novalidate>
+                    <p class="text-center">New User?
+                        <a href="{{ url_for('auth.register') }}" class="text-primary">Click to Register!</a>
+                    </p>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", size=32) }}
+                        {% for error in form.username.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", size=32) }}
+                        {% for error in form.password.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center">
+                        <a>Forgot Your Password? </a>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <a  href="{{ url_for('auth.reset_password_request') }}" class="text-primary">Click to Reset It</a>
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.remember_me(class="form-check-input") }}
+                        {{ form.remember_me.label(class="form-check-label") }}
+                    </div>
+                    <div class="text-center">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
