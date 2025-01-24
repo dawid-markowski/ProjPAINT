@@ -11,6 +11,7 @@ from app.checkout.forms import CheckoutForm
 @bp.route('/checkout', methods=['POST'])
 @login_required
 def checkout():
+    print(f"DEBUG: request.form = {request.form}")  # Dodaj na początku funkcji
     user = current_user
 
     if not user.cart or not user.cart.items:
@@ -18,14 +19,18 @@ def checkout():
         return redirect(url_for('cart.view_cart'))
 
     form = CheckoutForm()
+    print(f"DEBUG: form.validate_on_submit() = {form.validate_on_submit()}")  # Dodaj debugowanie
     if form.validate_on_submit():
+        payment_method = request.form.get('payment_method')
+        print(f"DEBUG: payment_method (from request.form) = {payment_method}")
         # Utwórz zamówienie
         order = Order(
             user=user,
             address=form.address.data,
             city=form.city.data,
             postal_code=form.postal_code.data,
-            status='pending'
+            status='pending',
+            payment_method = payment_method
         )
         db.session.add(order)
 
@@ -48,8 +53,21 @@ def checkout():
         db.session.query(CartItem).filter_by(cart_id=user.cart.id).delete()
         db.session.commit()
 
-        flash("Zamówienie zostało zrealizowane!", "success")
-        return redirect(url_for('checkout.view_orders'))
+        if payment_method == 'card':
+            flash("Platnosc karta powiodla sie", "info")
+            # Tutaj kod do przekierowania do bramki płatności
+            return redirect(url_for('checkout.view_orders', order_id=order.id))  # Przykładowe przekierowanie
+        elif payment_method == 'blik':
+            flash("Platnosc blikiem powiodla sie", "info")
+            # Tutaj kod do wygenerowania kodu BLIK i wyświetlenia instrukcji
+            return redirect(url_for('checkout.view_orders', order_id=order.id))
+        elif payment_method == 'pbr':
+            print("DEBUG: Obsługa płatności za pobraniem")  # Dodaj debugowanie
+            flash("Zamówienie za pobraniem zostało złożone.", "success")
+            return redirect(url_for('checkout.view_orders'))
+        else:
+            flash("Nieznana metoda płatności", "error")
+            return redirect(url_for('cart.view_cart'))
 
     return render_template('checkout/checkout.html',form=form)
 
