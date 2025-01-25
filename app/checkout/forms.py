@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Length, Optional, Regexp
 
 class CheckoutForm(FlaskForm):
@@ -12,6 +12,7 @@ class CheckoutForm(FlaskForm):
     expiration_date = StringField('Data ważności',validators=[Optional(), Regexp(r'^\d{2}/\d{2}$', message="Format MM/YY")])
     cvv = StringField('CVV', validators=[Optional(), Length(min=3, max=4)])
     blik_code = StringField('Kod BLIK',validators=[Optional(), Length(min=6, max=6, message="Kod BLIK musi mieć 6 cyfr")])
+    use_default_address = BooleanField('Użyj domyślnego adresu')
     submit = SubmitField("Złóż zamówienie")
 
     def validate(self, extra_validators=None):

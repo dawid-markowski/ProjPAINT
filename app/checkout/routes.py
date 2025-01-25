@@ -24,6 +24,16 @@ def checkout():
         payment_method = request.form.get('payment_method')
         delivery_method = form.delivery_method.data
         #print(f"DEBUG: payment_method (from request.form) = {payment_method}")
+        if form.use_default_address.data:
+            address = user.address
+            city = user.city
+            postal_code = user.postal_code
+        else:
+            address = form.address.data
+            city = form.city.data
+            postal_code = form.postal_code.data
+
+
         # Utwórz zamówienie
         order = Order(
             user=user,
@@ -70,8 +80,8 @@ def checkout():
         else:
             flash("Nieznana metoda płatności", "error")
             return redirect(url_for('cart.view_cart'))
-
-    return render_template('checkout/checkout.html',form=form)
+    address_data_present = bool(user.address and user.city and user.postal_code)
+    return render_template('checkout/checkout.html',form=form,address_data_present=address_data_present)
 
 
 @bp.route('/orders', methods=['GET'])

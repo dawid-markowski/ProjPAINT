@@ -6,5 +6,19 @@
     <p><a href="{{ url_for('main.edit_profile') }}">Edytuj profil</a></p>
     {% endif %}
     <hr>
-Wiecej informacji o userze
+
+    <h2>Informacje o użytkowniku:</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Liczba zamówień: {{ order_count }}</p>
+    <p>Całkowita wydana kwota: {{ "%.2f"|format(total_spent) }}</p>
+
+ {% if address_data_present %}
+    <h3>Adres:</h3>
+    <p>Adres: {{ user.address }}</p>
+    <p>Miasto: {{ user.city }}</p>
+    <p>Kod pocztowy: {{ user.postal_code }}</p>
+{% else %}
+    <p>Brak danych adresowych.</p>
+{% endif %}
+
 {% endblock %}

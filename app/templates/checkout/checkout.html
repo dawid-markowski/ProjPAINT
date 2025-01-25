@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
 
         .container {
@@ -93,17 +94,22 @@
 
                 <div class="form-group">
                     <label for="address">Adres:</label>
-                    {{ form.address(class="form-control") }}
+                    {{ form.address(class="form-control", id="address") }}
                 </div>
 
                 <div class="form-group">
                     <label for="city">Miasto:</label>
-                    {{ form.city(class="form-control") }}
+                    {{ form.city(class="form-control", id="city") }}
                 </div>
 
                 <div class="form-group">
                     <label for="postal_code">Kod pocztowy:</label>
-                    {{ form.postal_code(class="form-control") }}
+                    {{ form.postal_code(class="form-control", id="postal_code") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.use_default_address.label }}
+                    {{ form.use_default_address(id="use_default_address", disabled= (not current_user.address or not current_user.city or not current_user.postal_code) ) }}
                 </div>
 
                 <div class="form-group">
@@ -146,26 +152,42 @@
     </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const paymentMethodSelect = document.getElementById('payment_method');
-        const cardDetails = document.querySelectorAll('.card-details');
-        const blikDetails = document.querySelector('.blik-details');
+    $(document).ready(function() {
+        const paymentMethodSelect = $('#payment_method');
+        const cardDetails = $('.card-details');
+        const blikDetails = $('.blik-details');
+        const useDefaultAddressCheckbox = $('#use_default_address');
 
         function toggleFields() {
-            if (paymentMethodSelect.value === 'card') {
-                cardDetails.forEach(detail => detail.style.display = 'block');
-                blikDetails.style.display = 'none';
-            } else if (paymentMethodSelect.value === 'blik') {
-                cardDetails.forEach(detail => detail.style.display = 'none');
-                blikDetails.style.display = 'block';
+            if (paymentMethodSelect.val() === 'card') {
+                cardDetails.show();
+                blikDetails.hide();
+            } else if (paymentMethodSelect.val() === 'blik') {
+                cardDetails.hide();
+                blikDetails.show();
             } else {
-                cardDetails.forEach(detail => detail.style.display = 'none');
-                blikDetails.style.display = 'none';
+                cardDetails.hide();
+                blikDetails.hide();
             }
         }
 
-        paymentMethodSelect.addEventListener('change', toggleFields);
+        function fillAddressFields() {
+            if (useDefaultAddressCheckbox.is(':checked') && !useDefaultAddressCheckbox.is(':disabled')) {
+                $('#address').val('{{ current_user.address }}');
+                $('#city').val('{{ current_user.city }}');
+                $('#postal_code').val('{{ current_user.postal_code }}');
+            } else {
+                $('#address').val('');
+                $('#city').val('');
+                $('#postal_code').val('');
+            }
+        }
+
+
+        paymentMethodSelect.on('change', toggleFields);
+        useDefaultAddressCheckbox.on('change', fillAddressFields);
         toggleFields();
+        fillAddressFields();
     });
 </script>
 {% endblock %}

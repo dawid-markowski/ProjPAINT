@@ -25,6 +25,12 @@ class User(UserMixin,db.Model):
 
     orders: so.Mapped[list['Order']] = so.relationship('Order', backref='user')
 
+    address: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+
+    city: so.Mapped[Optional[str]] = so.mapped_column(sa.String(128))
+
+    postal_code: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32))
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
