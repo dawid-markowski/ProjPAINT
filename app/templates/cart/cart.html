@@ -1,28 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Twój Koszyk</h1>
+    <style>
 
-{% if cart_items %}
-    <ul>
-        {% for item in cart_items %}
-            <li>
-                {{ item.part.part_name }} - {{ item.quantity }} szt. -{{ item.part.price }}
-                <form method="post" action="{{ url_for('cart.remove_from_cart',item_id=item.id) }}" style="display: inline;">
-                    <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+    .container {
+        padding: 20px;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 0px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+
+    .btn-primary {
+        background: #00c9ff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background 0.3s;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-primary:hover {
+        background: #597a9f;
+    }
+
+
+    </style>
+    <div class="container">
+        <div class="product-card">
+            <h1>Twój Koszyk</h1>
+
+            {% if cart_items %}
+                <ul>
+                    {% for item in cart_items %}
+                        <li>
+                            {{ item.part.part_name }} - {{ item.quantity }} szt. -{{ item.part.price }}
+                            <form method="post" action="{{ url_for('cart.remove_from_cart',item_id=item.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-primary">Usuń</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            Podsumowanie: Cena {{ cart.get_total_price() }}
+             <!-- Przycisk Checkout -->
+                <form method="post" action="{{ url_for('checkout.checkout') }}">
+                    <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
                 </form>
-            </li>
-        {% endfor %}
-    </ul>
-Podsumowanie: Cena {{ cart.get_total_price() }}
- <!-- Przycisk Checkout -->
-    <form method="post" action="{{ url_for('checkout.checkout') }}">
-        <button type="submit" class="btn btn-success">Złóż zamówienie</button>
-    </form>
 
 
-{% else %}
-    <p>Twój koszyk jest pusty.</p>
-{% endif %}
+            {% else %}
+                <p>Twój koszyk jest pusty.</p>
+            {% endif %}
+        </div>
+    </div>
+
 
 {% endblock %}
