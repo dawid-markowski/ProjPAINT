@@ -1,62 +1,149 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Checkout</h1>
-<p>Proszę wypełnić dane zamówienia:</p>
+    <style>
 
-<form method="POST" action="{{ url_for('checkout.checkout') }}">
-    {{ form.hidden_tag() }}
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+        }
 
-    <div class="form-group">
-        <label for="address">Adres:</label>
-        {{ form.address(class="form-control") }}
+        .card {
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #b2bec3;
+            padding: 10px;
+        }
+
+        .form-control:focus {
+            border-color: #56a8e7;
+            box-shadow: 0 0 0 0.2rem rgba(116, 117, 119, 0.25);
+        }
+
+        .btn-primary {
+            background: #1677c9;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #597a9f;
+        }
+
+        a.text-primary {
+            color: #1677c9;
+            font-weight: bold;
+        }
+
+        a.text-primary:hover {
+            color: #143060;
+        }
+
+        .text-danger {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .text-center {
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+
+
+            <h1>Checkout</h1>
+            <p>Proszę wypełnić dane zamówienia:</p>
+
+            <form method="POST" action="{{ url_for('checkout.checkout') }}">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="address">Adres:</label>
+                    {{ form.address(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="city">Miasto:</label>
+                    {{ form.city(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="postal_code">Kod pocztowy:</label>
+                    {{ form.postal_code(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="payment_method">Metoda płatności:</label>
+                    <select name="payment_method" id="payment_method" class="form-control">  <option value="card">Karta</option>
+                        <option value="blik">BLIK</option>
+                        <option value="pbr">Za pobraniem</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery_method">Metoda dostawy:</label>
+                    {{ form.delivery_method(class="form-control") }}
+                </div>
+
+                <div class="form-group card-details" style="display: none;">
+                    <label for="card_number">Numer karty:</label>
+                    <input type="text" name="card_number" id="card_number" class="form-control">
+                </div>
+
+                <div class="form-group card-details" style="display: none;">
+                    <label for="expiration_date">Data ważności:</label>
+                    <input type="text" name="expiration_date" id="expiration_date" class="form-control" placeholder="MM/YY">
+                </div>
+
+                <div class="form-group card-details" style="display: none;">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" name="cvv" id="cvv" class="form-control">
+                </div>
+
+                <div class="form-group blik-details" style="display: none;">
+                    <label for="blik_code">Kod BLIK:</label>
+                    <input type="text" name="blik_code" id="blik_code" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary text-center">{{ form.submit.label }}</button>
+            </form>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="city">Miasto:</label>
-        {{ form.city(class="form-control") }}
-    </div>
-
-    <div class="form-group">
-        <label for="postal_code">Kod pocztowy:</label>
-        {{ form.postal_code(class="form-control") }}
-    </div>
-
-    <div class="form-group">
-        <label for="payment_method">Metoda płatności:</label>
-        <select name="payment_method" id="payment_method" class="form-control">  <option value="card">Karta</option>
-            <option value="blik">BLIK</option>
-            <option value="pbr">Za pobraniem</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="delivery_method">Metoda dostawy:</label>
-        {{ form.delivery_method(class="form-control") }}
-    </div>
-
-    <div class="form-group card-details" style="display: none;">
-        <label for="card_number">Numer karty:</label>
-        <input type="text" name="card_number" id="card_number" class="form-control">
-    </div>
-
-    <div class="form-group card-details" style="display: none;">
-        <label for="expiration_date">Data ważności:</label>
-        <input type="text" name="expiration_date" id="expiration_date" class="form-control" placeholder="MM/YY">
-    </div>
-
-    <div class="form-group card-details" style="display: none;">
-        <label for="cvv">CVV:</label>
-        <input type="text" name="cvv" id="cvv" class="form-control">
-    </div>
-
-    <div class="form-group blik-details" style="display: none;">
-        <label for="blik_code">Kod BLIK:</label>
-        <input type="text" name="blik_code" id="blik_code" class="form-control">
-    </div>
-
-    <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
-</form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
