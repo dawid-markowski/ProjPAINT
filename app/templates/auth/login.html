@@ -84,11 +84,11 @@
     <div class="container">
         <div class="card shadow">
             <div class="card-body">
-                <h2 class="text-center">Sign In</h2>
+                <h2 class="text-center">Zaloguj się</h2>
                 <form action="" method="post" novalidate>
-                    <p class="text-center">New User?
-                        <a href="{{ url_for('auth.register') }}" class="text-primary">Click to Register!</a>
-                    </p>
+                    <p class="text-center">Jesteś nowy?</p>
+                    <a href="{{ url_for('auth.register') }}" class="text-primary text-center">Kliknij, aby się zarejestrować!</a>
+
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
                         {{ form.username.label(class="form-label") }}
@@ -105,10 +105,10 @@
                         {% endfor %}
                     </div>
                     <div class="text-center">
-                        <a>Forgot Your Password? </a>
+                        <a>Zapomniałeś hasła? </a>
                     </div>
                     <div class="mb-3 text-center">
-                        <a  href="{{ url_for('auth.reset_password_request') }}" class="text-primary">Click to Reset It</a>
+                        <a  href="{{ url_for('auth.reset_password_request') }}" class="text-primary">Naciśnij aby je zrestartować</a>
                     </div>
                     <div class="mb-3 form-check">
                         {{ form.remember_me(class="form-check-input") }}
