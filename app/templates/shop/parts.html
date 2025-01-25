@@ -1,9 +1,163 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <h1>Hi, {{ current_user.username }}!</h1>
-        {% for part in parts %}
-        <div><p><a href="{{ url_for('shop.part', part=part.part_name) }}">{{ part.part_name }}</a></b> {{ part.group}} Cena:{{part.price}}</p></div>
-        {% endfor %}
-{% endblock %}
+<style>
+    .container {
+        display: flex;
+        padding: 20px;
+    }
 
+    .filter-section {
+        width: 250px;
+        margin-right: 20px;
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-section h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .filter-section label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .filter-section .checkbox-group {
+        margin-bottom: 15px;
+    }
+
+    .filter-section .checkbox-group label {
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .filter-section .checkbox-group input {
+        margin-right: 10px;
+    }
+
+    .filter-section button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #007bff;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .filter-section button:hover {
+        background: #0056b3;
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        flex-grow: 1;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+        transform: scale(1.02);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .product-info {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .product-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0 0 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .product-name:hover {
+        text-decoration: underline;
+    }
+
+    .product-category {
+        color: #555;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    .product-price {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+</style>
+
+<div class="container">
+    <div class="filter-section">
+    <h3>Filter</h3>
+    <form method="GET" action="">
+        <label>Categories</label>
+        <div class="checkbox-group">
+            <label>
+                <input type="checkbox" name="categories" value="all"
+                {% if 'all' in request.args.getlist('categories') %}checked{% endif %}> Wszystkie
+            </label>
+            {% set unique_categories = parts|map(attribute='group')|unique|list %}
+            {% for category in unique_categories %}
+            <label>
+                <input type="checkbox" name="categories" value="{{ category }}"
+                {% if category in request.args.getlist('categories') %}checked{% endif %}>
+                {{ category }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <label for="sort">Sortuj według</label>
+        <select id="sort" name="sort">
+            <option value="asc" {% if request.args.get('sort') == 'asc' %}selected{% endif %}>Cena rosnąco</option>
+            <option value="desc" {% if request.args.get('sort') == 'desc' %}selected{% endif %}>Cena malejąco</option>
+        </select>
+
+        <button type="submit">Zastosuj</button>
+    </form>
+    </div>
+
+    <div class="product-list">
+        {% for part in parts %}
+        <div class="product-card">
+            <div class="product-info">
+                <a href="{{ url_for('shop.part', part=part.part_name) }}" class="product-name">{{ part.part_name }}</a>
+                <p class="product-category">{{ part.group }}</p>
+                <p class="product-category">Opis: {{ part.description }}</p>
+                <p class="product-price">Cena: {{ part.price }} PLN</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
