@@ -1,39 +1,47 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block head %}
+    {{ super() }}
     <style>
+        .container {
+            padding: 20px;
+        }
 
-    .container {
-        padding: 20px;
-    }
+        .product-card {
+            background: #fff;
+            border-radius: 10px; /* Dodano zaokrąglenie */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+            padding: 15px; /* Dodano padding */
+        }
 
-    .product-card {
-        background: #fff;
-        border-radius: 0px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        transition: transform 0.2s;
-    }
+        .btn-primary {
+            background: #00c9ff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
 
+        .btn-primary:hover {
+            background: #597a9f;
+        }
 
-    .btn-primary {
-        background: #00c9ff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 1rem;
-        font-weight: bold;
-        transition: background 0.3s;
-        display: inline-block;
-        text-align: center;
-    }
-
-    .btn-primary:hover {
-        background: #597a9f;
-    }
-
-
+        /* Dodane style dla podsumowania */
+        .summary {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
     </style>
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <div class="product-card">
             <h1>Twój Koszyk</h1>
@@ -42,25 +50,24 @@
                 <ul>
                     {% for item in cart_items %}
                         <li>
-                            {{ item.part.part_name }} - {{ item.quantity }} szt. -{{ item.part.price }}
+                            {{ item.part.part_name }} - {{ item.quantity }} szt. -
+                            Cena: {{ "%.2f"|format(item.part.price * item.quantity) }} PLN
                             <form method="post" action="{{ url_for('cart.remove_from_cart',item_id=item.id) }}" style="display: inline;">
                                 <button type="submit" class="btn btn-primary">Usuń</button>
                             </form>
                         </li>
                     {% endfor %}
                 </ul>
-            Podsumowanie: Cena {{ cart.get_total_price() }}
-             <!-- Przycisk Checkout -->
+                <div class="summary">
+                    Podsumowanie: {{ "%.2f"|format(cart.get_total_price()) }} PLN
+                </div>
                 <form method="post" action="{{ url_for('checkout.checkout') }}">
                     <button type="submit" class="btn btn-primary">Złóż zamówienie</button>
                 </form>
-
 
             {% else %}
                 <p>Twój koszyk jest pusty.</p>
             {% endif %}
         </div>
     </div>
-
-
 {% endblock %}

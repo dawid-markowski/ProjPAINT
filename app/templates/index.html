@@ -1,58 +1,51 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-    .container {
+        .about-us-container { /* Zmieniona nazwa klasy */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 70vh;
+            min-height: 70vh; /* Zmieniono height na min-height */
         }
 
-        .card {
+        .about-us-container .card { /* Zwiększona specyficzność */
             border-radius: 10px;
             background: #ffffff;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            /* Usunięto display, flex-direction, justify-content, align-items - te style są już w klasie card-body z Bootstrapa */
         }
 
-        .card-body {
+        .about-us-container .card-body { /* Zwiększona specyficzność */
             padding: 4rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            /* Usunięto display, flex-direction, align-items - te style są już w klasie card-body z Bootstrapa */
         }
-        .text-center {
-            margin-bottom: 0.8rem;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
+
+        /* Usunięto zbędne style dla text-center, bo klasa z Bootstrapa już to robi */
     </style>
-    <div class="text-center">
-        <h1>Hi, {{ current_user.username }}!</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="text-center my-4">
+        <h1>Witaj, {{ current_user.username }}!</h1>
+        <p>Witamy na stronie Samochodoza</p>
     </div>
-    <div class="text-center">
-        Witamy na stronie Samochodoza
-    </div>
-    <div class="container">
+    <div class="about-us-container">
         <div class="card">
             <div class="card-body">
-                <h2> O nas... </h2>
-        Witamy w SAMOCHODOZA – miejscu, gdzie pasja do motoryzacji łączy się z jakością i profesjonalizmem! Jesteśmy sklepem z częściami samochodowymi, który powstał z myślą o kierowcach i mechanikach, poszukujących niezawodnych rozwiązań dla swoich pojazdów.
-        Od lat wspieramy zarówno miłośników czterech kółek, jak i specjalistów branży motoryzacyjnej, dostarczając szeroki wybór części zamiennych do różnych marek i modeli samochodów. Nasz asortyment obejmuje wszystko, czego możesz potrzebować – od elementów silnika, przez układy hamulcowe, aż po akcesoria i oleje.
-        W SAMOCHODOZA stawiamy na jakość, konkurencyjne ceny i błyskawiczną realizację zamówień. Nasz zespół ekspertów służy pomocą w doborze odpowiednich części, oferując profesjonalne doradztwo i pełne wsparcie na każdym etapie zakupu.
-        Naszym priorytetem jest Twoje zadowolenie oraz sprawność Twojego auta. Dzięki współpracy z renomowanymi producentami gwarantujemy oryginalność produktów i ich wysoką trwałość.
-        Zapraszamy do zakupów i odkrycia, dlaczego warto nam zaufać. Z nami każda naprawa staje się prostsza, a Twój samochód wraca na drogę w najlepszej formie! SAMOCHODOZA – bo Twój samochód zasługuje na to, co najlepsze.
-
+                <h2 class="card-title text-center mb-4">O nas...</h2>
+                <p class="card-text">
+                    Witamy w SAMOCHODOZA – miejscu, gdzie pasja do motoryzacji łączy się z jakością i profesjonalizmem! Jesteśmy sklepem z częściami samochodowymi, który powstał z myślą o kierowcach i mechanikach, poszukujących niezawodnych rozwiązań dla swoich pojazdów.
+                    Od lat wspieramy zarówno miłośników czterech kółek, jak i specjalistów branży motoryzacyjnej, dostarczając szeroki wybór części zamiennych do różnych marek i modeli samochodów. Nasz asortyment obejmuje wszystko, czego możesz potrzebować – od elementów silnika, przez układy hamulcowe, aż po akcesoria i oleje.
+                    W SAMOCHODOZA stawiamy na jakość, konkurencyjne ceny i błyskawiczną realizację zamówień. Nasz zespół ekspertów służy pomocą w doborze odpowiednich części, oferując profesjonalne doradztwo i pełne wsparcie na każdym etapie zakupu.
+                    Naszym priorytetem jest Twoje zadowolenie oraz sprawność Twojego auta. Dzięki współpracy z renomowanymi producentami gwarantujemy oryginalność produktów i ich wysoką trwałość.
+                    Zapraszamy do zakupów i odkrycia, dlaczego warto nam zaufać. Z nami każda naprawa staje się prostsza, a Twój samochód wraca na drogę w najlepszej formie! SAMOCHODOZA – bo Twój samochód zasługuje na to, co najlepsze.
+                </p>
             </div>
         </div>
     </div>
-
-
 {% endblock %}

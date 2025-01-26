@@ -1,5 +1,5 @@
 from flask_admin.contrib.sqla import ModelView
-from app.models import User, Part
+from app.models import User, Part, Cart, CartItem, Order, OrderItem
 from flask_login import current_user
 from flask_admin import AdminIndexView
 from flask import render_template
@@ -11,6 +11,7 @@ class ModelView(ModelView):
         # Sprawdza, czy użytkownik jest zalogowany i jest administratorem
         return current_user.is_authenticated and current_user.is_admin
 
+    column_exclude_list = ('password_hash')
 class MyHomeView(AdminIndexView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin
@@ -19,4 +20,7 @@ class MyHomeView(AdminIndexView):
 
 admin.add_view(ModelView(User,db.session))
 admin.add_view(ModelView(Part,db.session))
+admin.add_view(ModelView(Order, db.session))
+
+
 

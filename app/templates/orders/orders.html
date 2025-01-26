@@ -23,7 +23,7 @@
             margin-bottom: 20px;
             width: 80%; /* Możesz dostosować szerokość */
             max-width: 800px;
-            border-top: 10px solid #bb; /* Dodana linia */
+            border-top: 3px solid #bbb; /* Dodana linia */
         }
         .order-card:first-child{
              border-top: none;
@@ -108,7 +108,7 @@
             </div>
             <div class="order-info">
                 <p><strong>Status:</strong> {{ order.status }}</p>
-                <p><strong>Suma:</strong> {{ order.get_total_price() }}</p>
+                <p><strong>Suma:</strong> {{ "%.2f"|format(order.get_total_price()) }} PLN</p>
                 <button type="button" class="btn-details" data-toggle="collapse" data-target="#order-{{ order.id }}-details">
                     Szczegóły
                 </button>
@@ -132,8 +132,8 @@
                             <tr>
                                 <td class="product-name">{{ item.part.part_name }}</td>
                                 <td>{{ item.quantity }}</td>
-                                <td class="product-price">{{ item.part.price }}</td>
-                                <td class="product-price">{{ item.get_total_price() }}</td>
+                                <td class="product-price">{{ "%.2f"|format(item.part.price) }} PLN</td>
+                                <td class="product-price">{{ "%.2f"|format(item.get_total_price()) }} PLN</td>
                             </tr>
                             {% endfor %}
                         </tbody>
