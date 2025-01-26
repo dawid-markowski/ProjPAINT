@@ -54,8 +54,8 @@ Aplikacja internetowa sklepu z częściami samochodowymi.
 Do przetestowania funkcjonalności strony możesz użyć następujących kont:
 
 *   **Użytkownik:**
-    *   **Login:** test
-    *   **Hasło:** test
+    *   **Login:** user1
+    *   **Hasło:** password
 *   **Administrator:**
-    *   **Login:** admin
+    *   **Login:** admin1
     *   **Hasło:** admin
