@@ -1,24 +1,103 @@
 {% extends "base.html" %}
 
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Style dla user.html */
+        .user-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .card {
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .text-center {
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 2rem;
+        }
+
+        hr {
+            margin: 2rem 0;
+            width: 50%;
+        }
+
+        p {
+            margin-bottom: 0.2rem;
+        }
+
+        .card-body a {
+            margin-bottom: 1rem;
+        }
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dwie kolumny */
+            gap: 20px; /* Odstęp między elementami */
+            width: 100%;
+        }
+        .info-item {
+            text-align: left; /* Wyrównanie tekstu do lewej */
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <h1>User: {{ user.username }}</h1>
-    {% if user == current_user %}
-    <p><a href="{{ url_for('main.edit_profile') }}">Edytuj profil</a></p>
-    {% endif %}
-    <hr>
-
-    <h2>Informacje o użytkowniku:</h2>
-    <p>Email: {{ user.email }}</p>
-    <p>Liczba zamówień: {{ order_count }}</p>
-    <p>Całkowita wydana kwota: {{ "%.2f"|format(total_spent) }}</p>
-
- {% if address_data_present %}
-    <h3>Adres:</h3>
-    <p>Adres: {{ user.address }}</p>
-    <p>Miasto: {{ user.city }}</p>
-    <p>Kod pocztowy: {{ user.postal_code }}</p>
-{% else %}
-    <p>Brak danych adresowych.</p>
-{% endif %}
+<div class="user-container">
+    <h1 class="text-center">Profil użytkownika: {{ user.username }}</h1>
+    <div class="card">
+        <div class="card-body">
+          <div class="user-info-grid">
+            <div class="info-item">
+                <h2>Informacje Użytkownika</h2>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                 {% if address_data_present %}
+                    <p><strong>Adres:</strong></p>
+                    <p>{{ user.address }}</p>
+                    <p>{{ user.city }}</p>
+                    <p>{{ user.postal_code }}</p>
+                 {% else %}
+                    <p>Brak danych adresowych.</p>
+                 {% endif %}
+            </div>
+            <div class="info-item">
+                <h2>Zamówienia</h2>
+                <p><strong>Liczba zamówień:</strong> {{ order_count }}</p>
+                <p><strong>Całkowita wydana kwota:</strong> {{ "%.2f"|format(total_spent) }}</p>
+            </div>
+        </div>
+            {% if user == current_user %}
+            <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary">Edytuj profil</a>
+            <a href="{{ url_for('checkout.view_orders') }}" class="btn btn-primary mt-2">Zobacz zamówienia</a>
+            {% endif %}
+    </div>
+</div>
 
 {% endblock %}

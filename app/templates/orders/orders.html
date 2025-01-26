@@ -1,22 +1,163 @@
 {% extends "base.html" %}
 
+{% block head %}
+    {{ super() }}
+    <style>
+        .orders-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 80%; /* Możesz dostosować szerokość */
+            max-width: 800px;
+            border-top: 10px solid #bb; /* Dodana linia */
+        }
+        .order-card:first-child{
+             border-top: none;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .order-header h4 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .order-info p {
+            margin: 5px 0;
+        }
+
+        .order-info strong {
+            color: #555;
+        }
+
+        .btn-details {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .btn-details:hover {
+            background-color: #0056b3;
+        }
+
+        .order-details {
+            margin-top: 10px;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-table th, .product-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .product-table th {
+            background-color: #e9ecef;
+        }
+
+        .product-name {
+            font-weight: bold;
+        }
+        .product-price{
+            text-align: right;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
+<div class="orders-container">
     <h1>Twoje zamówienia</h1>
+
     {% if orders %}
-        <ul>
-            {% for order in orders %}
-            <li>
-                Zamówienie #{{ order.id }} - Status: {{ order.status }}
-                <ul>
-                    {% for item in order.items %}
-                    <li>{{ item.quantity }} x {{ item.part.part_name }}</li>
-                    {% endfor %}
-                </ul>
-                Cena: {{ order.get_total_price() }}
-            </li>
-            {% endfor %}
-        </ul>
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-header">
+                <h4>Zamówienie #{{ order.id }}</h4>
+                <span>Data: {{ order.created_at }}</span>
+            </div>
+            <div class="order-info">
+                <p><strong>Status:</strong> {{ order.status }}</p>
+                <p><strong>Suma:</strong> {{ order.get_total_price() }}</p>
+                <button type="button" class="btn-details" data-toggle="collapse" data-target="#order-{{ order.id }}-details">
+                    Szczegóły
+                </button>
+                <div id="order-{{ order.id }}-details" class="order-details" style="display: none">
+                    <p><strong>Adres:</strong> {{ order.address }}, {{ order.postal_code }} {{ order.city }}</p>
+                    <p><strong>Metoda płatności:</strong> {{ order.payment_method }}</p>
+                    <p><strong>Metoda dostawy:</strong> {{ order.delivery_method }}</p>
+
+                    <h4>Produkty:</h4>
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th width="500px">Nazwa</th>
+                                <th width="100px">Ilość</th>
+                                <th width="100px">Cena</th>
+                                <th width="100px">Suma</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items %}
+                            <tr>
+                                <td class="product-name">{{ item.part.part_name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="product-price">{{ item.part.price }}</td>
+                                <td class="product-price">{{ item.get_total_price() }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     {% else %}
-        <p>Nie masz żadnych zamówień.</p>
+        <p>Nie masz jeszcze żadnych zamówień.</p>
     {% endif %}
+</div>
+
+<script>
+    // Prosta obsługa pokazywania/ukrywania szczegółów bez jQuery i Bootstrap JS
+    const detailButtons = document.querySelectorAll('.btn-details');
+    detailButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.style.display = targetElement.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    });
+</script>
 {% endblock %}

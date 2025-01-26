@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Samochodoza</title>
-      {% else %}
-      <title>Welcome to Samochodoza</title>
-      {% endif %}
-    </head>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ title|default('Welcome to Samochodoza', true) }}{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,44 +71,48 @@
             transform: scale(1.05);
         }
     </style>
-    <body>
-        <div class="container1">
-            <h1>Samochodoza</h1>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    <div class="container1">
+        <h1>Samochodoza</h1>
 
-            <div class="nav-bar">
-                <a href="{{ url_for('main.index') }}">Strona główna</a>
-                {% if current_user.is_anonymous %}
-                <a href="{{ url_for('auth.login') }}">Zaloguj się</a>
-                {% else %}
-                {% if current_user.is_admin %}
-                <a href="{{ url_for('admin.index') }}">Panel admina</a>
-                {% endif %}
-                <a href="{{ url_for('main.user', username=current_user.username) }}">Profil</a>
-                <a href="{{ url_for('shop.parts') }}">Sklep</a>
-                <a href="{{ url_for('cart.view_cart') }}">Koszyk</a>
-                <a href="{{ url_for('checkout.view_orders') }}">Zamówienia</a>
-                <a href="{{ url_for('auth.logout') }}">Wyloguj się</a>
-                {% endif %}
-            </div>
-
-            <div class="search-bar">
-                <form method="GET" action={{url_for('shop.parts')}}>
-                    <input type="text" name="search" placeholder="Szukaj częsci..." value="{{ search_query }}">
-                    <button type="submit">Szukaj</button>
-                </form>
-            </div>
+        <div class="nav-bar">
+            <a href="{{ url_for('main.index') }}">Strona główna</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('auth.login') }}">Zaloguj się</a>
+            {% else %}
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('admin.index') }}">Panel admina</a>
+            {% endif %}
+            <a href="{{ url_for('main.user', username=current_user.username) }}">Profil</a>
+            <a href="{{ url_for('shop.parts') }}">Sklep</a>
+            <a href="{{ url_for('cart.view_cart') }}">Koszyk</a>
+            <a href="{{ url_for('checkout.view_orders') }}">Zamówienia</a>
+            <a href="{{ url_for('auth.logout') }}">Wyloguj się</a>
+            {% endif %}
         </div>
 
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
+        <div class="search-bar">
+            <form method="GET" action={{url_for('shop.parts')}}>
+                <input type="text" name="search" placeholder="Szukaj częsci..." value="{{ search_query }}">
+                <button type="submit">Szukaj</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}
+    {% endblock %}
+</body>
 </html>
