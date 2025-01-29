@@ -20,7 +20,7 @@ class User(UserMixin,db.Model):
     is_admin = so.mapped_column(sa.Boolean, default=False)
 
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(
-        back_populates='author')
+        back_populates='author', passive_deletes=True)
     cart: so.Mapped['Cart'] = so.relationship('Cart', back_populates='user', uselist=False)
 
     orders: so.Mapped[list['Order']] = so.relationship('Order', backref='user')
