@@ -66,7 +66,7 @@ class Part(db.Model):
 
     price: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
 
-    comments: so.WriteOnlyMapped['Comment'] = so.relationship(back_populates='p_commented')
+    comments: so.WriteOnlyMapped['Comment'] = so.relationship(back_populates='p_commented',passive_deletes=True)
 
     order_items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='part')
 
