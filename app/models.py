@@ -21,9 +21,9 @@ class User(UserMixin,db.Model):
 
     comments: so.WriteOnlyMapped['Comment'] = so.relationship(
         back_populates='author', passive_deletes=True)
-    cart: so.Mapped['Cart'] = so.relationship('Cart', back_populates='user', uselist=False)
+    cart: so.Mapped['Cart'] = so.relationship('Cart', back_populates='user', uselist=False,cascade="all, delete-orphan")
 
-    orders: so.Mapped[list['Order']] = so.relationship('Order', backref='user')
+    orders: so.Mapped[list['Order']] = so.relationship('Order', backref='user',cascade="all, delete-orphan")
 
     address: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
@@ -139,7 +139,7 @@ class Order(db.Model):
     delivery_method: so.Mapped[str] = so.mapped_column(nullable=False)
 
     # Relacja z pozycjami zamówienia
-    items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='order')
+    items: so.Mapped[list['OrderItem']] = so.relationship('OrderItem', back_populates='order',cascade="all, delete-orphan")
 
     def get_total_price(self) -> float:
         """Oblicza łączną cenę zamówienia."""
